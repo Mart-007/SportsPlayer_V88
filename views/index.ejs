@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+        <link rel="stylesheet" href="stylesheet/index.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="//cdn.jsdelivr.net/npm/less@3.13"></script>
+		<title>Ajax sports and players</title>
+        <script>
+			$(document).ready(function () {
+				$("form").submit(function () {
+					return false;
+				});
+				$("#name").on("input", function (e) {
+					let data = {
+						name: e.target.value,
+					};
+					$.post(
+						"filter-by-name-gender-and-sports",
+						data,
+						function (res) {
+							console.log(res);
+							let html = ``;
+							for (let i = 0; i < res.data.length; i++) {
+								html += `<div class="col s3 player card">`;
+								html += `<img src="${res.data[i].image_url}" alt="${res.data[i].image_url}" />`;
+								html += `<p>${res.data[i].name}</p>`;
+								html += `</div>`;
+							}
+							$(".players").html(html);
+						},
+						"json"
+					);
+				});
+				$(".gender, .sports").click(function () {
+					let serialize_data = $("form").serialize();
+					console.log(serialize_data);
+					$.post(
+						"filter-by-name-gender-and-sports",
+						serialize_data,
+						function (res) {
+							console.log(res);
+							let html = ``;
+							for (let i = 0; i < res.data.length; i++) {
+								html += `<div class="col s3 player card">`;
+								html += `<img src="${res.data[i].image_url}" alt="${res.data[i].image_url}" />`;
+								html += `<p>${res.data[i].name}</p>`;
+								html += `</div>`;
+							}
+							$(".players").html(html);
+						},
+						"json"
+					);
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<nav class="red darken-4">
+			<div class="container">
+				<div class="nav-wrapper">
+					<a href="#" class="brand-logo">Express 2 : Ajax sports and players</a>
+				</div>
+			</div>
+		</nav>
+
+		<div class="mt-2 container">
+			<!-- Page Layout here -->
+			<div class="row">
+				<div class="col s3">
+					<!-- Grey navigation panel -->
+					search and filter
+
+					<div class="row">
+						<form class="col s12" method="POST" action="filter-process" class="filterForm">
+							<div class="row">
+								<div class="input-field col s12">
+									<input id="name" name="name" type="text" class="validate" />
+									<label for="name">Name</label>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="input-field col s6">
+									<label>
+										<input type="checkbox" class="filled-in gender" id="gender" value="female" name="gender[]" />
+
+										<span>Female</span>
+									</label>
+								</div>
+								<div class="input-field col s6">
+									<label>
+										<input type="checkbox" class="filled-in gender" id="gender" value="male" name="gender[]" />
+
+										<span>Male</span>
+									</label>
+								</div>
+							</div>
+
+							<div class="row mt-2">
+								<div class="s12">
+									<h6>Sports</h6>
+									<div class="row">
+										<%for(let sport in sports) { %>
+										<div class="input-field col s6">
+											<label>
+												<input type="checkbox" class="filled-in sports" name="sports[]" value="<%= sports[sport].id %>" />
+												<span><%= sports[sport].name %></span>
+											</label>
+										</div>
+										<% }%>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="col offset-s1 s8">
+					<div class="row players">
+						<%for(let player in players) { %>
+						<div class="col s3 player card">
+							<img src="<%= players[player].image_url %>" alt="<%= players[player].name %>" />
+							<p><%= players[player].name %></p>
+						</div>
+						<%}%>
+					</div>
+				</div>
+			</div>
+		</div>
+    </body>
+</html>

@@ -1,0 +1,12 @@
+.mt-2 {
+    margin-top: 2rem;
+}
+.p-2 {
+    padding: 2rem !important;
+}
+.pl-2 {
+    padding-left: 2rem !important;
+}
+p span {
+    font-weight: bold;
+}
